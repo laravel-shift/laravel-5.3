@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Something\Here', 'test');
-        $this->app->bind('\Something\There', 'test');
+        $this->app->bind('App\Here', 'test');
+        $this->app->bind('\App\There', 'test');
     }
 }
