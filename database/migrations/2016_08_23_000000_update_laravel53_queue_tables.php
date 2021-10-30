@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ShiftFailedJobsTable extends Migration
+class ShiftJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,12 @@ class ShiftFailedJobsTable extends Migration
      */
     public function up()
     {
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->dropIndex(['queue', 'reserved', 'reserved_at']);
+            $table->dropColumn('reserved');
+            $table->index(['queue', 'reserved_at']);
+        });
+
         Schema::table('failed_jobs', function (Blueprint $table) {
             $table->longText('exception');
         });
@@ -25,6 +31,12 @@ class ShiftFailedJobsTable extends Migration
      */
     public function down()
     {
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->dropIndex(['queue', 'reserved_at']);
+            $table->tinyInteger('reserved')->unsigned();
+            $table->index(['queue', 'reserved', 'reserved_at']);
+        });
+
         Schema::table('failed_jobs', function (Blueprint $table) {
             $table->dropColumn('exception');
         });
